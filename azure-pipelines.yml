@@ -79,4 +79,4 @@ steps:
     azureSubscription: 'Visual Studio Enterprise (883bf586-e0da-4577-91da-2a0f42a08f64)'
     appName: 'vikascnr'
     appType: 'webApp'
-    package: $(System.DefaultWorkingDirectory).zip
+    package: $(System.DefaultWorkingDirectory)/**/*.zip
