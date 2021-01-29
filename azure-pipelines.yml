@@ -74,3 +74,8 @@ steps:
     publishWebProjects: True
     arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
     zipAfterPublish: True
+- task: AzureWebApp@1
+  inputs:
+    azureSubscription: 'Visual Studio Enterprise (883bf586-e0da-4577-91da-2a0f42a08f64)'
+    appName: 'vikascnr'
+    package: $(System.DefaultWorkingDirectory).zip
