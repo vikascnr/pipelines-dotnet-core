@@ -65,18 +65,9 @@ steps:
     pathtoPublish: '$(Build.ArtifactStagingDirectory)' 
     artifactName: 'myWebsiteName'
 
-# ...
-# do this after you've built your app, near the end of your pipeline in most cases
-# for example, you do this before you deploy to an Azure web app on Windows
-- task: DotNetCoreCLI@2
-  inputs:
-    command: publish
-    publishWebProjects: True
-    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-    zipAfterPublish: True
 - task: AzureWebApp@1
   inputs:
     azureSubscription: 'Visual Studio Enterprise (883bf586-e0da-4577-91da-2a0f42a08f64)'
     appName: 'vikascnr'
     appType: 'webApp'
-    package: $(System.DefaultWorkingDirectory)/**/*.zip
+    package: $(Build.ArtifactStagingDirectory)/**/*.zip
