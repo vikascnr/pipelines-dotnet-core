@@ -71,7 +71,7 @@ steps:
 
 - task: AzureWebApp@1 # Add this at the end of your file
   inputs:
-    azureSubscription: 883bf586-e0da-4577-91da-2a0f42a08f64
+    azureSubscription: $(azureSubscription)
     appType: webAppLinux
     appName: $(appName)
     package: $(System.ArtifactsDirectory)/**/*.zip
