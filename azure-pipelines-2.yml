@@ -22,8 +22,10 @@ steps:
     command: 'publish'
     publishWebProjects: false
     projects: '**/*.csproj'
-    arguments: '--output $(Build.BinariesDirectory)/publish_output/App_Data/jobs/continuous'
+    arguments: '-o testpath'
     zipAfterPublish: false
+    modifyOutputPath: true
+
 
 - task: ArchiveFiles@2
   inputs:
