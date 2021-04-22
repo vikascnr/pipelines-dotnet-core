@@ -7,17 +7,46 @@ trigger:
 - master
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: windows-latest
 
 steps:
 
-- task: AzureRmWebAppDeployment@4
+- task: DotNetCoreCLI@2
   inputs:
-    ConnectionType: 'AzureRM'
-    azureSubscription: 'Ps-ae-dev-test-SC'
-    appType: 'webApp'
-    WebAppName: 'webapp_service'
-    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+    command: 'build'
+    projects: '**/*.csproj'
+    arguments: '-configusation Release'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'publish'
+    publishWebProjects: false
+    projects: '**/*.csproj'
+    arguments: '--output $(Build.BinariesDirectory)/publish_output/App_Data/jobs/continuous'
+    zipAfterPublish: false
+
+- task: ArchiveFiles@2
+  inputs:
+    rootFolderOrFile: '$(Build.BinariesDirectory)/publish_output'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
+    replaceExistingArchive: true
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+
+
+# - task: AzureRmWebAppDeployment@4
+#   inputs:
+#     ConnectionType: 'AzureRM'
+#     azureSubscription: 'Ps-ae-dev-test-SC'
+#     appType: 'webApp'
+#     WebAppName: 'webapp_service'
+#     packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
 
 
 
