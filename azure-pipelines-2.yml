@@ -4,46 +4,33 @@
 # https://aka.ms/yaml
 
 trigger:
-- master
+- main
 
 pool:
   vmImage: ubuntu-latest
 
 steps:
 
-- task: PublishPipelineArtifact@1
+
+- task: DotNetCoreCLI@2
   inputs:
-    targetPath: $(System.DefaultWorkingDirectory)/bin/WebApp
-    artifactName: WebApp
+    command: 'build'
+    projects: '**/*.csproj'
+    arguments: '$(System.DefaultWorkingDirectory)'
 
-
-# - task: DotNetCoreCLI@2
-#   inputs:
-#     command: 'build'
-#     projects: '**/*.csproj'
-#     arguments: '-configusation Release'
-
-# - task: DotNetCoreCLI@2
-#   inputs:
-#     command: 'publish'
-#     publishWebProjects: false
-#     projects: '**/*.csproj'
-#     arguments: '-o testpath'
-#     zipAfterPublish: false
-#     modifyOutputPath: true
-
-
-- task: AzureRmWebAppDeployment@4
+- task: DotNetCoreCLI@2
   inputs:
-    ConnectionType: 'AzureRM'
-    azureSubscription: 'Ps-ae-dev-test-SC'
-    appType: 'webApp'
-    WebAppName: 'webapp_service'
-    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+    command: 'publish'
+    publishWebProjects: false
+    projects: '**/*.csproj'
+    arguments: '-o testpath'
+    zipAfterPublish: false
+    modifyOutputPath: true
+
 
 - task: ArchiveFiles@2
   inputs:
-    rootFolderOrFile: '$(Build.BinariesDirectory)/publish_output'
+    rootFolderOrFile: '$(Build.BinariesDirectory)'
     includeRootFolder: false
     archiveType: 'zip'
     archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip'
@@ -54,6 +41,21 @@ steps:
     PathtoPublish: '$(Build.ArtifactStagingDirectory)'
     ArtifactName: 'drop'
     publishLocation: 'Container'
+
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: $(System.DefaultWorkingDirectory)
+    artifactName: WebApp
+
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Ps-ae-dev-test-SC'
+    appType: 'webApp'
+    WebAppName: 'webapp_service'
+    packageForLinux: '$(System.DefaultWorkingDirectory).zip'
+
 
 
 
