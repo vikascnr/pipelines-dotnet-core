@@ -11,21 +11,29 @@ pool:
 
 steps:
 
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'build'
-    projects: '**/*.csproj'
-    arguments: '-configusation Release'
+# - task: DotNetCoreCLI@2
+#   inputs:
+#     command: 'build'
+#     projects: '**/*.csproj'
+#     arguments: '-configusation Release'
 
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'publish'
-    publishWebProjects: false
-    projects: '**/*.csproj'
-    arguments: '-o testpath'
-    zipAfterPublish: false
-    modifyOutputPath: true
+# - task: DotNetCoreCLI@2
+#   inputs:
+#     command: 'publish'
+#     publishWebProjects: false
+#     projects: '**/*.csproj'
+#     arguments: '-o testpath'
+#     zipAfterPublish: false
+#     modifyOutputPath: true
 
+
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Ps-ae-dev-test-SC'
+    appType: 'webApp'
+    WebAppName: 'webapp_service'
+    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
 
 - task: ArchiveFiles@2
   inputs:
@@ -42,13 +50,6 @@ steps:
     publishLocation: 'Container'
 
 
-# - task: AzureRmWebAppDeployment@4
-#   inputs:
-#     ConnectionType: 'AzureRM'
-#     azureSubscription: 'Ps-ae-dev-test-SC'
-#     appType: 'webApp'
-#     WebAppName: 'webapp_service'
-#     packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
 
 
 
